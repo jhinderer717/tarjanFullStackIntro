@@ -40,6 +40,25 @@ app.get( '/songs', ( req, res )=>{
     }) // end query
 }) // end /songs GET
 
+// Get a single song
+// Endpoint: GET /songs/:id
+app.get('/songs/:id', (req, res)=>{
+    console.log('song id to retrieve', req.params.id);
+
+    // Grab song ID from URL params
+    let songId = req.params.id;
+
+    const queryString = `SELECT * FROM "songs" WHERE "id" = $1;`
+    pool.query(queryString, [songId])
+        .then((results)=>{
+            res.send(results.rows)
+        })
+        .catch((err) =>{
+            console.log('error!', err);
+            res.sendStatus(500);
+        });
+} )
+
 app.post( '/songs', ( req, res )=>{
     console.log( 'in /songs POST:', req.body );
     // create query string

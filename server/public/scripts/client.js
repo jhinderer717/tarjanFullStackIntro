@@ -16,6 +16,9 @@ function deleteSong(){
         url: `/songs/${songId}`
     }).then(function(response){
         console.log('deleted!', response);
+
+        // TODO: refresh page (aka do another GET request)
+        getSongs();
     }).catch(function(err){
         console.log('error in delete', err);
         alert('oh no');
