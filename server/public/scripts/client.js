@@ -3,7 +3,24 @@ $( document ).ready( onReady );
 function onReady(){
     getSongs();
     $( '#addSongButton' ).on( 'click', addSong );
+    $(document).on('click', '.deleteSongButton', deleteSong);
 } // end onReady
+
+function deleteSong(){
+    // Grab the `data-id` attribute
+    // from our "Button"
+    let songId = $(this).data('id');
+
+    $.ajax({
+        method: 'DELETE',
+        url: `/songs/${songId}`
+    }).then(function(response){
+        console.log('deleted!', response);
+    }).catch(function(err){
+        console.log('error in delete', err);
+        alert('oh no');
+    });
+}
 
 function addSong(){
     let objectToSend = {
@@ -40,6 +57,7 @@ function getSongs(){
             ${ response[i].track }
             ${ response[i].artist }
             ${ response[i].published.split( 'T' )[0] }
+            <button class="deleteSongButton" data-id="${response[i].id}">Bye</button>
             </li>`)
         } // end for
     }).catch( function( err ){
