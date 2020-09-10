@@ -4,6 +4,8 @@ function onReady(){
     getSongs();
     $( '#addSongButton' ).on( 'click', addSong );
     $(document).on('click', '.deleteSongButton', deleteSong);
+    $(document).on('click', '.rankUpButton', rankUp);
+    $(document).on('click', '.rankDownButton', rankDown);
 } // end onReady
 
 function deleteSong(){
@@ -61,6 +63,8 @@ function getSongs(){
             ${ response[i].artist }
             ${ response[i].published.split( 'T' )[0] }
             <button class="deleteSongButton" data-id="${response[i].id}">Bye</button>
+            <button class="rankUpButton" data-id="${response[i].id}">Level Up!</button>
+            <button class="rankDownButton" data-id="${response[i].id}">Rank Down</button>
             </li>`)
         } // end for
     }).catch( function( err ){
@@ -68,3 +72,26 @@ function getSongs(){
         console.log( err );
     }) // end AJAX GET
 } // end getSongs()
+
+function rankUp(){
+    let songId = $(this).data('id');
+    console.log('level up!', songId);
+    $.ajax({
+        method: 'PUT',
+        url: `/songs/${songId}`,
+        data: {
+            direction: 'up'
+        }
+        }).then(function(response){
+            console.log('response from rankUp', response);
+            getSongs();
+        }).catch( function( err ){
+            alert( 'error!' );
+            console.log( err );
+    }); // end ajax PUT
+} // end rankUp
+
+function rankDown(){
+    let songId = $(this).data('id');
+    console.log('rank down', songId);
+}

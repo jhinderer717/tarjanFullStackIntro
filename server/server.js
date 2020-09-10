@@ -90,3 +90,27 @@ app.delete('/songs/:id', (req, res)=>{
             res.sendStatus(500);
         })
 });
+
+app.put('/songs/:id', (req, res)=>{
+    console.log('params', req.params.id, req.body);
+    // res.sendStatus(200);
+    let queryString = '';
+
+    if(req.body.direction === 'up'){
+        queryString = `UPDATE "songs" SET "rank" = "rank"+1 WHERE "id" = $1`;
+    }else if(req.body.direction === 'down'){
+        queryString = `UPDATE "songs" SET "rank" = "rank"-1 WHERE "id" = $1`;
+    }else{
+        console.log('send better data');
+    }
+
+    pool.query(queryString, [req.params.id])
+    .then((result)=>{
+        console.log('result from put', result);
+        res.sendStatus(200);
+    }).catch((err)=>{
+        console.log('error from put', err);
+        res.sendStatus(500);
+    });
+
+});
